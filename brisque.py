@@ -14,6 +14,20 @@ from utilities import root_path
 class BRISQUE(object):
     def __init__(self):
         self._model = svmutil.svm_load_model(root_path('allmodel'))
+        self._scaler = np.array([
+            [-1, 1], [0.338, 10], [0.017204, 0.806612], [0.236, 1.642],
+            [-0.123884, 0.20293],[0.000155, 0.712298], [0.001122, 0.470257],
+            [0.244, 1.641], [-0.123586, 0.179083], [0.000152, 0.710456],
+            [0.000975, 0.470984], [0.249, 1.555], [-0.135687, 0.100858],
+            [0.000174, 0.684173], [0.000913, 0.534174], [0.258, 1.561],
+            [-0.143408, 0.100486], [0.000179, 0.685696], [0.000888, 0.536508],
+            [0.471, 3.264], [0.012809, 0.703171], [0.218, 1.046],
+            [-0.094876, 0.187459], [1.5e-005, 0.442057], [0.001272, 0.40803],
+            [0.222, 1.042], [-0.115772, 0.162604], [1.6e-005, 0.444362],
+            [0.001374, 0.40243], [0.227, 0.996],
+            [-0.117188, 0.09832299999999999], [3e-005, 0.531903],
+            [0.001122,  0.369589], [0.228, 0.99], [-0.12243, 0.098658],
+            [2.8e-005, 0.530092], [0.001118, 0.370399]])
 
     @staticmethod
     def preprocess_image(img):
@@ -82,7 +96,8 @@ class BRISQUE(object):
             imdist = cv2.resize(
                 image,
                 (int(scale * image.shape[1]),
-                 int(scale * image.shape[0]))
+                 int(scale * image.shape[0])),
+                interpolation=cv2.INTER_NEAREST
             )
 
             mu = cv2.GaussianBlur(
@@ -115,8 +130,16 @@ class BRISQUE(object):
     def get_score(self, img):
         feature = self.get_feature(img)
 
+        # Scale the feature
+        y_lower = self._scaler[0][0]
+        y_upper = self._scaler[0][1]
+        y_min = self._scaler[1:, 0]
+        y_max = self._scaler[1:, 1]
+        scaled_feat = y_lower + (y_upper - y_lower) * ((feature - y_min) / (
+                y_max-y_min))
+
         x, idx = gen_svm_nodearray(
-            feature[1:].tolist(),
+            scaled_feat.tolist(),
             isKernel=(self._model.param.kernel_type == 'PRECOMPUTED')
         )
         nr_classifier = 1
