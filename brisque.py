@@ -31,6 +31,11 @@ class BRISQUE(object):
 
     @staticmethod
     def preprocess_image(img):
+        """Handle any kind of input for our convenience.
+
+        :param img: The image path or array.
+        :type img: str, np.ndarray
+        """
         if isinstance(img, str):
             if os.path.exists(img):
                 return cv2.imread(img, 0).astype(np.float32)
@@ -51,6 +56,11 @@ class BRISQUE(object):
 
     @staticmethod
     def _estimate_ggd_param(vec):
+        """Estimate GGD parameter.
+
+        :param vec: The vector that we want to approximate its parameter.
+        :type vec: np.ndarray
+        """
         gam = np.arange(0.2, 10 + 0.001, 0.001)
         r_gam = (gamma(1.0 / gam) * gamma(3.0 / gam) / (gamma(2.0 / gam) ** 2))
 
@@ -67,6 +77,11 @@ class BRISQUE(object):
 
     @staticmethod
     def _estimate_aggd_param(vec):
+        """Estimate AGGD parameter.
+
+        :param vec: The vector that we want to approximate its parameter.
+        :type vec: np.ndarray
+        """
         gam = np.arange(0.2, 10 + 0.001, 0.001)
         r_gam = ((gamma(2.0 / gam)) ** 2) / (
                     gamma(1.0 / gam) * gamma(3.0 / gam))
@@ -85,21 +100,17 @@ class BRISQUE(object):
         return alpha, left_std, right_std
 
     def get_feature(self, img):
-        """Assuming that the image is already in grayscale."""
-        image = self.preprocess_image(img)
+        """Get brisque feature given an image.
+
+        :param img: The path or array of the image.
+        :type img: str, np.ndarray
+        """
+        imdist = self.preprocess_image(img)
 
         scale_num = 2
         feat = np.array([])
 
         for itr_scale in range(scale_num):
-            scale = 1. / (itr_scale + 1)
-            imdist = cv2.resize(
-                image,
-                (int(scale * image.shape[1]),
-                 int(scale * image.shape[0])),
-                interpolation=cv2.INTER_NEAREST
-            )
-
             mu = cv2.GaussianBlur(
                 imdist, (7, 7), 7 / 6, borderType=cv2.BORDER_CONSTANT)
             mu_sq = mu * mu
@@ -113,9 +124,8 @@ class BRISQUE(object):
 
             shifts = [[0, 1], [1, 0], [1, 1], [-1, 1]]
             for shift in shifts:
-                M = np.float32([[1, 0, shift[1]], [0, 1, shift[0]]])
-                shifted_structdis = cv2.warpAffine(np.float32(structdis), M, (
-                    structdis.shape[1], structdis.shape[0]))
+                shifted_structdis = np.roll(
+                    np.roll(structdis, shift[0], axis=0), shift[1], axis=1)
                 pair = structdis * shifted_structdis
                 alpha, left_std, right_std = self._estimate_aggd_param(pair)
 
@@ -125,21 +135,49 @@ class BRISQUE(object):
                 feat = np.append(
                     feat, [alpha, mean_param, left_std ** 2, right_std ** 2])
 
+            imdist = cv2.resize(
+                imdist,
+                (0, 0),
+                fx=0.5,
+                fy=0.5,
+                interpolation=cv2.INTER_NEAREST
+            )
         return feat
 
     def get_score(self, img):
-        feature = self.get_feature(img)
+        """Get brisque score given an image.
 
-        # Scale the feature
+        :param img: The path or array of the image.
+        :type img: str, np.ndarray
+        """
+        feature = self.get_feature(img)
+        scaled_feature = self._scale_feature(feature)
+
+        return self._calculate_score(scaled_feature)
+
+    def _scale_feature(self, feature):
+        """Scale feature with svm scaler.
+
+        :param feature: Brisque unscaled feature.
+        :type feature: np.ndarray
+        """
         y_lower = self._scaler[0][0]
         y_upper = self._scaler[0][1]
         y_min = self._scaler[1:, 0]
         y_max = self._scaler[1:, 1]
         scaled_feat = y_lower + (y_upper - y_lower) * ((feature - y_min) / (
-                y_max-y_min))
+                y_max - y_min))
 
+        return scaled_feat
+
+    def _calculate_score(self, scaled_feature):
+        """Calculate score from scaled brisque feature.
+
+        :param scaled_feature: Scaled brisque feature.
+        :type scaled_feature: np.ndarray
+        """
         x, idx = gen_svm_nodearray(
-            scaled_feat.tolist(),
+            scaled_feature.tolist(),
             isKernel=(self._model.param.kernel_type == 'PRECOMPUTED')
         )
         nr_classifier = 1
@@ -147,3 +185,4 @@ class BRISQUE(object):
 
         return svmutil.libsvm.svm_predict_probability(
             self._model, x, prob_estimates)
+
