@@ -2,3 +2,6 @@
 *__pycache__
 *venv/
 *.ipynb_checkpoints
+build/
+dist/
+pybrisque.egg-info
