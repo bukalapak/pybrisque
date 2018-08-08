@@ -11,9 +11,12 @@ from setuptools import setup, find_packages
 
 setup(
     name='pybrisque',
-    version='0.9',
+    version='0.9.3',
+    packages=find_packages(),
     py_modules=['brisque', 'utilities'],
-    data_files=[('', ['allmodel', 'LICENSE'])],
+    package_data={
+        '': ['allmodel', 'LICENSE']
+    },
     include_package_data=True,
     license='GPL',
     author='Akbar Gumbira',

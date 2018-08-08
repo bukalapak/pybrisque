@@ -25,5 +25,3 @@ else
 
     twine upload dist/*.tar.gz
 fi
-
-
