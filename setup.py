@@ -14,10 +14,11 @@ setup(
     version='0.9',
     py_modules=['brisque', 'utilities'],
     data_files=[('', ['allmodel', 'LICENSE'])],
+    include_package_data=True,
     license='GPL',
     author='Akbar Gumbira',
     author_email='akbar.gumbira@bukalapak.com',
-    url='https://www.bukalapak.com/',
+    url='https://github.com/bukalapak/pybrisque',
     description=('A package for BRISQUE metric calculation.'),
     long_description=open('README.md').read(),
     install_requires=[

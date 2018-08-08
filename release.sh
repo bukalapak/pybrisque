@@ -23,7 +23,7 @@ else
     git tag -s version-$TAG_VERSION -m "Version $VERSION"
     git push --tags origin version-$TAG_VERSION
 
-    twine upload --repository-url https://upload.pypi.org/legacy dist/*
+    twine upload dist/*.tar.gz
 fi
 
 
