@@ -8,12 +8,12 @@ import svmutil
 from svmutil import gen_svm_nodearray
 from ctypes import c_double
 
-from utilities import root_path
+from brisque.utilities import root_path
 
 
 class BRISQUE(object):
     def __init__(self):
-        self._model = svmutil.svm_load_model(root_path('allmodel'))
+        self._model = svmutil.svm_load_model(root_path('brisque', 'allmodel'))
         self._scaler = np.array([
             [-1, 1], [0.338, 10], [0.017204, 0.806612], [0.236, 1.642],
             [-0.123884, 0.20293],[0.000155, 0.712298], [0.001122, 0.470257],

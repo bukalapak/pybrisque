@@ -7,7 +7,7 @@ echo "Have you updated README & Docs?"
 read -sn 1 -p "Press any key to continue..."
 echo
 
-python setup.py sdist bdist_wheel
+python setup.py sdist
 
 if [ $1 == "test" ];
  then

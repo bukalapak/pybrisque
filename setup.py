@@ -11,13 +11,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='pybrisque',
-    version='0.9.3',
+    version='0.9.4',
     packages=find_packages(),
-    py_modules=['brisque', 'utilities'],
     package_data={
-        '': ['allmodel', 'LICENSE']
+        'brisque': ['allmodel']
     },
-    include_package_data=True,
     license='GPL',
     author='Akbar Gumbira',
     author_email='akbar.gumbira@bukalapak.com',
@@ -41,5 +39,12 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Topic :: Scientific/Engineering',
+        'Topic :: Scientific/Engineering :: Image Recognition',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+
     ]
 )

@@ -1,12 +1,11 @@
 # coding=utf-8
-import os
 import unittest
 
 import numpy as np
 import cv2
 
-from utilities import root_path
 from brisque import BRISQUE
+from brisque.utilities import root_path
 
 
 class TestBRISQUE(unittest.TestCase):
