@@ -1,12 +1,12 @@
 # coding=utf-8
 import os
+from ctypes import c_double
 
 import cv2
 import numpy as np
 from scipy.special import gamma
 import svmutil
 from svmutil import gen_svm_nodearray
-from ctypes import c_double
 
 from brisque.utilities import root_path
 
@@ -38,7 +38,7 @@ class BRISQUE(object):
         """
         if isinstance(img, str):
             if os.path.exists(img):
-                return cv2.imread(img, 0).astype(np.float32)
+                return cv2.imread(img, 0).astype(np.float64)
             else:
                 raise FileNotFoundError('The image is not found on your '
                                         'system.')
@@ -50,7 +50,7 @@ class BRISQUE(object):
             else:
                 raise ValueError('The image shape is not correct.')
 
-            return image.astype(np.float32)
+            return image.astype(np.float64)
         else:
             raise ValueError('You can only pass image to the constructor.')
 
@@ -126,7 +126,8 @@ class BRISQUE(object):
             for shift in shifts:
                 shifted_structdis = np.roll(
                     np.roll(structdis, shift[0], axis=0), shift[1], axis=1)
-                pair = structdis * shifted_structdis
+                pair = np.ravel(structdis, order='F') * \
+                       np.ravel(shifted_structdis, order='F')
                 alpha, left_std, right_std = self._estimate_aggd_param(pair)
 
                 const = np.sqrt(gamma(1 / alpha)) / np.sqrt(gamma(3 / alpha))
@@ -185,4 +186,3 @@ class BRISQUE(object):
 
         return svmutil.libsvm.svm_predict_probability(
             self._model, x, prob_estimates)
-
