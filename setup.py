@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pybrisque',
-    version='0.9.4',
+    version='1.0',
     packages=find_packages(),
     package_data={
         'brisque': ['allmodel']

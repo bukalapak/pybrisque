@@ -17,7 +17,7 @@ brisq = BRISQUE()
 and get the BRISQUE feature or score many times:
 ```
 brisq.get_feature('/path')
-brisq.get_feature('/image_path')
+brisq.get_score('/image_path')
 ```
 
 
