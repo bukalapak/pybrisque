@@ -5,6 +5,10 @@ in the Spatial Domain"](https://ieeexplore.ieee.org/document/6272356/).
 
 
 ## Installation
+LibSVM is required. On ubuntu or other debian-based system, you can install ```libsvm-dev``` package from apt as follows:
+
+```apt-get install libsvm-dev```
+
 The package is in PyPI so you can install it simply by this command:
 
 ```pip install --process-dependency-links pybrisque```
