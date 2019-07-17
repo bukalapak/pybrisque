@@ -5,3 +5,4 @@
 build/
 dist/
 pybrisque.egg-info
+.DS_Store
