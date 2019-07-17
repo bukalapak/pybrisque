@@ -25,11 +25,7 @@ setup(
     install_requires=[
         'numpy',
         'scipy',
-        'opencv-python',
-        'libsvm'
-    ],
-    dependency_links=[
-        'git+https://github.com/akbargumbira/libsvm-python.git@master#egg=libsvm-0'
+        'opencv-python-headless'
     ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',

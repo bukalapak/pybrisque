@@ -5,13 +5,30 @@ in the Spatial Domain"](https://ieeexplore.ieee.org/document/6272356/).
 
 
 ## Installation
-LibSVM is required. On ubuntu or other debian-based system, you can install ```libsvm-dev``` package from apt as follows:
+
+## Installing libsvm
+LibSVM and its python bindings are required. Please ensure that the libsvm library and its python bindings are compatible with each other (even better, having the exact same version). On ubuntu or other debian-based system, you can install ```libsvm-dev``` package from apt as follows:
 
 ```apt-get install libsvm-dev```
 
+As a note, libsvm version on debian package list is as follows:
+- Ubuntu 16.04: 3.12
+- Ubuntu 18.04: 3.21
+
+If you're on debian, you can install its python binding with the exact same version by running:
+```apt-get install python-libsvm```. Please be aware that the binding is only linked to Python 2.7. You can manually link them to your currently active environment by adding it to your PYTHONPATH or your sys path as such:
+```
+>> import sys
+>>> sys.path.append('/usr/share/pyshared')
+```
+
+
+If you're using macOS, using brew, you can have the latest version (3.23). See [here](https://github.com/Homebrew/homebrew-core/blob/master/Formula/libsvm.rb).
+
+## Installing pybrisque
 The package is in PyPI so you can install it simply by this command:
 
-```pip install --process-dependency-links pybrisque```
+```pip install pybrisque```
 
 ## Usage
 Initialize once:
