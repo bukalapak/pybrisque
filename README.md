@@ -23,6 +23,13 @@ and get the BRISQUE feature or score many times:
 brisq.get_feature('/path')
 brisq.get_score('/image_path')
 ```
+alternatively, provide a numpy array of an image to get the BRISQUE feature or score:
+```
+image = np.ones((1920,1080,3))
+brisq.get_feature(image)
+brisq.get_score(image)
+```
+
 
 
 ## Limitations
