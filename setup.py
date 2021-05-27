@@ -28,9 +28,6 @@ setup(
         'opencv-python',
         'libsvm'
     ],
-    dependency_links=[
-        'git+https://github.com/akbargumbira/libsvm-python.git@master#egg=libsvm-0'
-    ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',

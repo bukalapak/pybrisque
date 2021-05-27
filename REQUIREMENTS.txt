@@ -1,4 +1,0 @@
-numpy
-scipy
-opencv-python-headless
--e git+https://github.com/Salinger/libsvm-python.git#egg=libsvm-python
